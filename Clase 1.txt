@@ -1,0 +1,316 @@
+Clase 1:
+Del computador al microcontrolador
+
+8 bits = 1 byte
+
+Binario: lo lee la computadora. -> Lenguaje para software y Hardware.
+
+Hexadecimal: lo lee el humano.
+
+Octal: (en desuso)
+
+CPU -> ser el cerebro de la máquina.
+
+Memoria: se guarda mediante flip flop y capacitores mediante bits.
+
+Volátil
+
+No Volátil
+
+Buses: Van y vienen, transportan, ancho de bus, son unidireccionales y bidireccionales. 3 tipos de buses: Control, datos, dirección.
+
+Ensamblador: Lenguaje de bajo nivel.
+
+Sistema embebido: Un aparato con un microcontrolador dentro, dedicado a una tarea fija. Hace una cosa, siempre la misma. Poca memoria, poco consumo. Funciona sin que el usuario lo note. Muchas veces debe responder a tiempo.
+
+Microprocesador frente a microcontrolador
+
+Microprocesador: placa, RAM, Disco, CPU, GPU. La CPU sola.
+
+Microcontrolador: Un solo chip. CPU, SRAM, Flash (periféricos). Todo en un chip.
+
+Dentro de la CPU
+
+CPU -> ejecuta el programa.
+
+Verde -> Bus de dirección (a donde tiene que ir).
+
+Negro -> Bus de datos (el contenido, la instrucción).
+
+Amarillo -> Bus de control (leer/escribir) solo 2 cables, no hay más opciones.
+
+1 byte = 8 bits | 1 KB = 1024 bytes | 1 MB = 1024 KB
+
+ALU -> Unidad Aritmético Lógica: suma, resta, hace AND, OR, XOR. Realiza las operaciones.
+
+Registros -> casilleros internos rápidos. El AVR tiene 32: r0 a r31.
+
+Unidad de control -> lee cada instrucción y decide qué hacer.
+
+Contador de programa -> guarda la dirección de la siguiente instrucción.
+
+Nota: Una CPU completa. El ATmega 328P tiene 1 núcleo y el ESP32 tiene 2 núcleos.
+
+Ciclo de la CPU (repite 3 pasos al ritmo del reloj y vuelve a empezar millones de veces por segundo):
+
+Buscar: trae la instrucción desde la memoria.
+
+Decodificar: entiende qué pide.
+
+Ejecutar: Hace lo... (que dice).
+
+El reloj: (onda cuadrada). 16 MHz = 16 millones de pulsos por segundo. Cada pulso dura 62.5 ns.
+
+Microprocesador -> a 2.5 GHz.
+
+Clase 2:
+Arquitectura y Memoria
+
+Bus de Direcciones -> Qué pasillo -> De la CPU hacia fuera (lleva un sentido).
+
+Datos -> El contenido.
+
+Control -> Leer o escribir.
+
+Von Neumann frente a Harvard
+
+Von Neumann: CPU <-> 1 bus de programa y datos.
+
+Harvard: CPU <-> Memoria de programa | CPU <-> Memoria de datos.
+
+Tipos de memoria
+
+Flash -> no se borra -> guarda el programa como un libro. Dura 10.000 ciclos.
+
+SRAM -> se borra -> guarda variables mientras el programa corre -> como una pizarra.
+
+EEPROM -> no se borra -> guarda pocos datos que el programa cambia y sobreviven al apagado -> como una libreta. Dura 100.000 ciclos.
+
+Nota: 1 int -> 2 bytes. Un ciclo = borrar y volver a escribir la misma celda de info. Evitar escribir en la EEPROM dentro de loop(), arruina la memoria por segundo, se agota en unos 6 min.
+
+Periféricos
+
+GPIO -> Poner un pin 0 o 1, o leerlo.
+
+Timer -> Cuenta pulsos para medir tiempo.
+
+Interrupciones -> Avisar a la CPU que algo pasó.
+
+ADC -> Voltaje -> número (sensor / luz).
+
+PWM -> Prender y apagar rápido.
+
+DAC -> número -> voltaje.
+
+UART -> Serial por 2 cables (Tx, Rx).
+
+I2C -> Bus de 2 cables. Direcciones.
+
+SPI -> Bus rápido de 4 cables.
+
+Clase 3:
+Placa ESP32 y MCU
+
+Placa ESP32 DevKit V1: USB, regulador... Módulo ESP32-WROOM-32. Chip ESP32.
+
+MCU: ¿Necesito un SO? Si no, un MCU lo hace y consume menos. ¿Cuántos pines y cuánta memoria? Sobredimensionar es gastar energía y material. ¿De dónde sale energía? Con batería, cada microamperio cuenta.
+
+Conversiones (decimal, binario y hexadecimal)
+
+1000 0001 -> 0x81 hex -> 129 decimal
+
+0x77 -> 0111 0111 binario -> 119 decimal
+
+0x08 -> 0000 1000
+
+200 -> 1100 1000 binario -> 0xC8 hex
+
+Operadores Lógicos (Bit a bit)
+
+AND -> Si ambos son 1.
+
+OR -> Si alguno es 1.
+
+XOR -> Si son distintos.
+
+NOT -> Invierte.
+
+La máscara: 1<<n para un bit
+
+0 0 1 0 0 0 0 0 -> 1<<5 = 0x20
+
+Poner el bit n en 1: REG |= (1<<n)
+
+Poner el bit n en 0: REG &= ~(1<<n)
+
+Invertir el bit n: REG ^= (1<<n)
+
+Preguntar por el bit n: if (REG & (1<<n)) -> quiero saber si el bit está en 1.
+
+Clase 4:
+Lenguaje RISC
+
+LDI -> carga inmediatamente algo. R16, 0x20
+
+ADD -> sumar. R16, R17
+
+SBI -> con esto se escribe un 1. 0x05, 5
+
+CBI -> con esto se escribe un 0. 0x05, 5
+
+RJMP -> salto de línea hacia adelante o hacia atrás.
+
+El Port b |= (1<<5) es el lenguaje que nosotros como humanos entendemos, el sbi 0x05, 5 es el lenguaje ensamblador que se convierte por medio del compilador, luego tenemos los bits que es el lenguaje que tiene la máquina entendiendo lo escrito por el humano y por último tenemos la energía con la que trabajará la máquina.
+
+Puertos en AVR (DDRB, PORTB, PINB)
+
+DDRB -> Dirección: entrada o salida. 1 -> salida, 0 -> entrada.
+
+PORTB -> Si es salida, valor que sale. Si es entrada -> activa o desactiva pull-up.
+
+PINB -> Leer el voltaje real del pin -> El pin está en alto.
+
+DDRB = 0 -> entrada. DDRB = 1 -> salida.
+
+PORTB = 0 -> 0V. PORTB = 1 -> 5V.
+
+Si DDRB = 0 y PORTB = 1 -> Resistencia Pull up. (Se dice conector en pull up a tierra, aplasto el pulsador manda 0V, sin aplastar siempre manda 5V).
+
+Si DDRB = 0 y PORTB = 0 -> Entrada Flotante / Impedancia.
+
+Clase 5:ATmega328P vs ESP32
+Comparativa
+
+Característica	ATmega 328P	ESP32
+Ancho de palabra	8 bits	32 bits
+Núcleos	1 a 16MHz	2 a 160MHz o 240MHz
+SRAM	2 KB	520 KB
+Flash	32 KB	4 MB (chip aparte)
+Tensión Lógica	5V	3.3V
+Pin <-> Bit: El pin se controla escribiendo bits en registros empotrados en memoria.
+
+Niveles de control:
+
+digitalWrite(16, HIGH) -> Lento pero seguro (Core Arduino).
+
+gpio_set_level(16, 1) -> Se habla directamente con el procesador.
+
+GPIO_OUT_W1TS_REG = 1 << 16 -> Bits en registro (hardware).
+
+Pines y Funciones del ESP32
+
+Pines de Strapping -> lista de verificación que el microcontrolador lee en el instante que se enciende o se reinicia.
+
+GPIO0 -> Siempre en 0V o en bajo para saber que debe esperar instrucciones nuevas al conectar mi placa al USB.
+
+GPIO2 -> Si recibe voltaje ALTO al momento de encender, le dice a la memoria del chip que trabaje a voltaje máx.
+
+GPIO5 y GPIO15 -> No conectar bobinas, sensores o interruptores porque pueden enviar voltaje accidentalmente durante el encendido.
+
+Límite de voltaje -> si conecto a la salida de un sensor o su pin al del ESP32 y excedo la energía, quema ese pin.
+
+Límite de corriente -> 40mA -> si conecto un componente que consume más, daña el pin o hace que el microcontrolador se reinicie.
+
+Evitar: El microcontrolador no es un "hilo de programa", es un ciclo infinito que solo se detiene si lo desconecto o lo reinicio.
+
+Clase 6: Temporizadores y Concepto de Tiempo
+GPIO y Función de Tiempo
+
+GPIO -> es un nombre, no una posición.
+
+30 -> pines en la placa DevKit V1.
+
+25 -> de esos pines son GPIO.
+
+35 -> GPIO existen en el chip.
+
+34 a 39 -> solo como entrada.
+
+Promoción -> asigna variables de más de dos bits cuando quiero escribir algo pequeño.
+
+Temporizador -> circuito dentro de un microcontrolador que cuenta con pulsos de reloj. Es un circuito aparte que cuenta y avisa a la hora exacta. No nace en 0, depende cómo lo asignemos.
+
+delay -> bloquea el circuito o todo hasta que el tiempo termine.
+
+millis -> todos siguen trabajando.
+
+Contador -> registro del temporizador donde se va a almacenar la información. Empieza en 0 y le suma 1 en cada pulso.
+
+La CPU lo configura.
+
+La CPU lo habilita.
+
+El temporizador cuenta solo.
+
+La CPU lo detiene.
+
+Temporizadores, Reloj y Prescaler
+
+El reloj: señal que sube y baja a frec. fija, pulso tras pulso.
+
+APB -> bus de periféricos de ESP32. es de 80 MHz, llega a los temporizadores. Todos los periféricos conecta a la CPU.
+
+80 MHz -> 80 000 000 pulsos por segundo, cada pulso 12.5 ns.
+
+Prescaler -> divisor antes del contador.
+
+-> divisores dejan pasar al contador solo 1 cada N pulsos de reloj. contador avanza N veces más lento.
+
+N pequeño: ticks cortos = más precisión.
+
+Resolución -> duración de un tick. tiempo más pequeño que el temporizador puede distinguir.
+
+Alarma y fórmula del tiempo
+
+(Gráfico de escalera) altura = resolución | número = alarma.
+
+Alarma: número que se guarda en un registro. Cuando el contador lo alcanza, temporizador genera aviso.
+
+Fórmulas:
+
+tiempo = alarma x resolucion
+
+alarma = tiempo x f
+
+Ejemplo: f = 1 000 000, T_D = 0.5 s
+
+Resolución: 1/f  ->  1 / 1 000 000 = 1 us
+
+Alarma: t x f  ->  0.5 s * 1 000 000 = 500 000
+
+Temporizador: 500 000 x 1 us = 0.5 s
+
+Prescaler: N = 80 000 000 / 1 000 000 = 80
+
+Clase 7: Interrupciones y Señales
+Sondeo -> pregunta una y otra vez, en el loop, si algo pasó.
+
+Interrupción -> Aviso de hardware que pausa el programa para atender algo urgente.
+
+Interrup Externa -> aviso llega desde fuera del chip por un pin.
+
+ISR -> Interrupt Service Routine: función que se ejecuta al llegar el aviso.
+
+Flanco -> instante que una señal cambia de 0 a 1 o 1 a 0.
+
+Rebote -> Varios cambios falsos y rapidísimos que produce un botón mecánico.
+
+Watchdog -> "Perro guardián": reinicia el chip si algo se queda trabado por mucho tiempo.
+
+Tipos de Flancos
+
+Flanco bajada -> Falling (1->0). Ocurre al presionar.
+
+Rising (0->1) -> Flanco subida. Ocurre al soltar.
+
+Change -> los dos cambios.
+
+Programación de Interrupciones
+
+isrBoton -> función que dice que vamos a trabajar con interrupciones, no se pone digital write/read, instrucciones de leer, escribir.
+
+Siempre aplicar IRAM_ATTR con ISR.
+
+volatile bool alerta = false -> lo manda a la ram a verificar.
+
+Para variables solo sirven que ambos lo toquen tanto ISR como loop, si no, no funciona o no es Volatile.
